@@ -12,7 +12,7 @@ var app = 'app/';
 var dist = 'dist/';
 
 // https://github.com/ai/autoprefixer
-var autoprefixerBrowsers = [                 
+var autoprefixerBrowsers = [
   'ie >= 9',
   'ie_mob >= 10',
   'ff >= 30',
@@ -41,6 +41,12 @@ gulp.task('html', function() {
     .pipe($.connect.reload());
 });
 
+gulp.task('externalScripts', function(){
+  return gulp.src(app + 'scripts/js-lib/json-editor.js')
+    .pipe(gulp.dest(dist + 'js/'))
+    .pipe($.size({ title : 'js' }))
+});
+
 gulp.task('styles',function(cb) {
 
   // convert stylus to css
@@ -51,7 +57,7 @@ gulp.task('styles',function(cb) {
       // include 'normal' css into main.css
       'include css' : true
     }))
-    .pipe($.autoprefixer({browsers: autoprefixerBrowsers})) 
+    .pipe($.autoprefixer({browsers: autoprefixerBrowsers}))
     .pipe(gulp.dest(dist + 'css/'))
     .pipe($.size({ title : 'css' }))
     .pipe($.connect.reload());
@@ -95,5 +101,5 @@ gulp.task('default', ['build', 'serve', 'watch']);
 
 // waits until clean is finished then builds the project
 gulp.task('build', ['clean'], function(){
-  gulp.start(['images', 'html','scripts','styles']);
+  gulp.start(['images', 'html', 'scripts', 'externalScripts', 'styles']);
 });
